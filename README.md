@@ -1,17 +1,24 @@
-# React Starter w/ Express Server, using Parcel
+# Art of Problem Solving applicatoin challenge
 
-This is a project template that can be used to quickly start a react project. It has minimal dependencies and has a server route that you can use to proxy requests without exposing your api keys.
+This is a project put together for the Art of Problem Solving application challenge. I'd link to it but this is a private repo since they ask to not have this published...
 
 ## Getting Started
 
-Install dependencies:
+#### Install dependencies:
 ```
 $ npm install
 ```
 
-Run the build
+#### Run the build once
 ```
 $ npm run build
+```
+
+Or 
+
+#### Run a watcher that you leave open
+```
+$ npm run watch
 ```
 
 Start the server
@@ -19,13 +26,8 @@ Start the server
 $ npm run start
 ```
 
-## Use case
+## Hosting
+This will be hosted soon... 
 
-When you create a request to a third party API from the server side (to protect your API key/credentials) you should create a `.env` file with your key.
 
-This will ensure that your private credentials do not get committed to git and will not be exposed to others on Github.
-
-You will also need to modify the `server/server.js` file to make your call to your api url and return back your data to your front end.
-
-An example of a request to a mock server is shown in the file. You will replace this with the API you want data from.
 
