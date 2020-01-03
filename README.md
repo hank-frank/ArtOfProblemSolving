@@ -27,7 +27,6 @@ $ npm run start
 ```
 
 ## Hosting
-This will be hosted soon... 
+Check it oout at : 
 
-
-
+https://asop-pyramid-descent.herokuapp.com/
