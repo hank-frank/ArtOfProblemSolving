@@ -1,6 +1,6 @@
-# Art of Problem Solving applicatoin challenge
+# AOPS applicatoin challenge
 
-This is a project put together for the Art of Problem Solving application challenge. I'd link to it but this is a private repo since they ask to not have this published...
+This is a project put together for the Art of Problem Solving application challenge.
 
 ## Getting Started
 
