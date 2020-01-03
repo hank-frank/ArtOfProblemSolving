@@ -160,7 +160,7 @@ ul {
 
 .footer {
     width: 100%;
-    height: 5vh;
+    height: 10vh;
     bottom: 0;
     background-color: $orange;
     @include vertical-center;
@@ -168,4 +168,9 @@ ul {
 
 .no-path-message {
     color: $orange;
+}
+
+.link {
+    color: $grey;
+    text-decoration: none;
 }

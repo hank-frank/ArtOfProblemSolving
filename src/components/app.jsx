@@ -44,23 +44,28 @@ function App () {
             ];
 
             pathOptions.forEach((number, index) => {
-                const direction = index ? "R" : "L";
+                let direction; 
+                if (index === 0) {
+                    direction = "L"
+                } else {
+                    direction = "R"
+                }
 
                 workingRow++;
-                workingTotal = workingTotal * number;
-                workingPath = workingPath + direction;
+                workingTotal *= number;
+                workingPath += direction;
                 
                 if (workingTotal === expected && workingRow === inputArray.length) {
                     pathFound = workingPath;
                     return true;
                 }
                 else if (workingRow < inputArray.length) {
-                    parentRow = parentRow + index;
+                    parentRow += index;
                     findPath(workingRow, parentRow, workingTotal, workingPath)
                 }
                 
                 workingRow--;
-                workingTotal = workingTotal / number;
+                workingTotal /= number;
                 workingPath = workingPath.slice(0, -1);
             })
 
@@ -93,18 +98,18 @@ function App () {
 
             pathOptions.forEach((number, index) => {
                 workingRow++;
-                workingTotal = workingTotal * number;
+                workingTotal *= number;
                 
                 if (workingRow === inputArray.length) {
                     resultsArray.push(workingTotal);
                 }
                 else if (workingRow < inputArray.length) {
-                    parentRow = parentRow + index;
+                    parentRow += index;
                     findAll(workingRow, parentRow, workingTotal, workingPath)
                 }
                 
                 workingRow--;
-                workingTotal = workingTotal / number;
+                workingTotal /= number;
                 workingPath = workingPath.slice(0, -1);
             })
 
@@ -229,6 +234,11 @@ function App () {
             <div className="footer">
                 <div className="horizontal">
                     <h6>Thanks for checking it out!</h6>
+                </div>
+                <div className="horizontal">
+                    <h6>The github for this is: <br/>
+                    <a className="link" href="https://github.com/hank-frank/ArtOfProblemSolving">Viewable Here</a>
+                    </h6>
                 </div>
             </div>
         </>
