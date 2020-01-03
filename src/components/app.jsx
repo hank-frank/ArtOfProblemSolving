@@ -1,56 +1,67 @@
 import React, { useState, useEffect } from 'react';
-// import { HashRouter as Router, Route } from 'react-router-dom';
-// import { render } from 'react-dom';
 
 function App () {
-    // [480, 240, 1080, 720, 540, 432, 288, 216, 160, 120, 360, 1200, 900, 2700, 1080, 360]
     let [inputArray, setInputArray] = useState([[2], [4, 3], [3, 2, 6], [2, 9, 5, 2], [10, 5, 2, 15, 5]]);
+    let [userInput, setUserInput] = useState('');
     let [possibleResults, setPossibleResults] = useState([]);
-    let [expected, setExpected] = useState(1080);
-    let [result, setResult] = useState(["test"]);
+    let [expected, setExpected] = useState([]);
+    let [result, setResult] = useState([]);
+    let [possibleLengths, setPossibleLengths] = useState([]);
 
     useEffect(() => {
         let possibilities = pyramidPossibilities(inputArray);
         setPossibleResults(possibilities);
-    },[])
+
+        let len = possiblePyramidLengths();
+        setPossibleLengths(len);
+        
+        setResult(pyramidDescent(inputArray, expected));
+    },[inputArray, expected])
+
+    let possiblePyramidLengths = () => {
+        let stop = 30;
+        let total = 1;
+        let arr = [];
+
+        for (let i = 0; i < stop; i++) {
+            total += i;
+            arr.push(total);
+            total++
+        }
+        return arr;
+    }
 
     const pyramidDescent = (inputArray, expected) => {
         let pathFound = '';
         let resultsArray = [];
 
-        const findPath = (currentRow = 1, parentIndex = 0, runningTotal = inputArray[0], runningDirection ='') => {  
-            const row = inputArray[currentRow];
-            // console.log(`Row: `, row);
-            // console.log(`parent index: `, parentIndex);
-            // console.log(`runningTotal: `, runningTotal);
-            // console.log(`runningDirection: `, );
-            // console.log(`resultsArray: `, resultsArray)
+        const findPath = (workingRow = 1, parentRow = 0, workingTotal = inputArray[0], workingPath ='') => {  
+            const currentRow = inputArray[workingRow];
             
             const pathOptions = [
-            row[parentIndex],
-            row[parentIndex + 1]
+                currentRow[parentRow],
+                currentRow[parentRow + 1]
             ];
 
             pathOptions.forEach((number, index) => {
-            const direction = index ? "R" : "L";
+                const direction = index ? "R" : "L";
 
-            currentRow++;
-            runningTotal = runningTotal * number;
-            runningDirection = runningDirection + direction;
-            
-            if (runningTotal === expected && currentRow === inputArray.length) {
-                pathFound = runningDirection;
-                return true;
-            }
-            else if (currentRow < inputArray.length) {
-                parentIndex = parentIndex + index;
-                findPath(currentRow, parentIndex, runningTotal, runningDirection)
-            }
-            
-            currentRow--;
-            runningTotal = runningTotal / number;
-            runningDirection = runningDirection.slice(0, -1);
-
+                workingRow++;
+                workingTotal = workingTotal * number;
+                workingPath = workingPath + direction;
+                
+                if (workingTotal === expected && workingRow === inputArray.length) {
+                    pathFound = workingPath;
+                    return true;
+                }
+                else if (workingRow < inputArray.length) {
+                    parentRow = parentRow + index;
+                    findPath(workingRow, parentRow, workingTotal, workingPath)
+                }
+                
+                workingRow--;
+                workingTotal = workingTotal / number;
+                workingPath = workingPath.slice(0, -1);
             })
 
             if (pathFound) {
@@ -65,55 +76,37 @@ function App () {
                 return false;
             }
         };
-            return findPath();
+        
+        return findPath();
     };
 
     const pyramidPossibilities = (inputArray) => {
-        let pathFound = '';
         let resultsArray = [];
 
-        const findAll = (currentRow = 1, parentIndex = 0, runningTotal = inputArray[0], runningDirection ='') => {  
-            const row = inputArray[currentRow];
-            //console.log(`Row: `, row);
-            //console.log(`parent index: `, parentIndex);
-            //console.log(`runningTotal: `, runningTotal);
-            // console.log(`runningDirection: `, );
-            // console.log(`resultsArray: `, resultsArray)
-            
+        const findAll = (workingRow = 1, parentRow = 0, workingTotal = inputArray[0], workingPath ='') => {  
+            const currentRow = inputArray[workingRow];
+
             const pathOptions = [
-            row[parentIndex],
-            row[parentIndex + 1]
+                currentRow[parentRow],
+                currentRow[parentRow + 1]
             ];
 
             pathOptions.forEach((number, index) => {
-            // const direction = index ? "R" : "L";
-
-            currentRow++;
-            runningTotal = runningTotal * number;
-            // runningDirection = runningDirection + direction;
-            
-            if (currentRow === inputArray.length) {
-                console.log(`runningTotal from if: `, runningTotal);
-                resultsArray.push(runningTotal);
+                workingRow++;
+                workingTotal = workingTotal * number;
                 
-            }
-            else if (currentRow < inputArray.length) {
-                parentIndex = parentIndex + index;
-                console.log(`runningTotal from else: `, runningTotal)
-                console.log(`parentIndex from else: `, parentIndex)
-                findAll(currentRow, parentIndex, runningTotal, runningDirection)
-            }
-            
-            currentRow--;
-            runningTotal = runningTotal / number;
-            runningDirection = runningDirection.slice(0, -1);
-
+                if (workingRow === inputArray.length) {
+                    resultsArray.push(workingTotal);
+                }
+                else if (workingRow < inputArray.length) {
+                    parentRow = parentRow + index;
+                    findAll(workingRow, parentRow, workingTotal, workingPath)
+                }
+                
+                workingRow--;
+                workingTotal = workingTotal / number;
+                workingPath = workingPath.slice(0, -1);
             })
-
-            if (pathFound) {
-            resultsArray.push(pathFound);
-            pathFound = '';
-            }
 
             if (resultsArray.length > 0) {
                 return resultsArray;
@@ -121,45 +114,123 @@ function App () {
             else {
                 return false;
             }
-        };
-            console.log(`possible results: `, resultsArray);    
-        // setPossibleResults(resultsArray);
-            return findAll();
+        };   
+        
+        return findAll();
     };
 
-    let final = () => {
-        let theValue = pyramidDescent(inputArray, expected);
-        console.log(`value: `, theValue)
-        setResult(theValue);
-    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        let raw = userInput.split(',');
+        let clean = [];
+        let newPyramid = [];
+        let newRow = [];
+        let rowLength = 1;
 
-    let testValue = pyramidDescent(inputArray, expected);
-    
-    
+        const conditionals = (inputLength) => {
+            let forReturn = false;
+                possibleLengths.forEach((possibleLength) => {
+                    if (inputLength === possibleLength) {
+                        forReturn = true;
+                    }
+                })
+            return forReturn;
+        }
+        
+        raw.forEach((each) => {
+            if (Number(each) > 0) {
+            clean.push(Number(each));
+            }
+        })
+
+        if (conditionals(clean.length) === true) {
+            clean.forEach((each) => {
+                newRow.push(each);
+                if (newRow.length === rowLength) {
+                    newPyramid.push(newRow);
+                    newRow = [];
+                    rowLength++;
+                }
+            })
+            setInputArray(newPyramid);
+            
+        } else {
+            alert(`Not the right amount of numbers to make a pyramid. ex. 1, 3, 6, 10, 15, 21, 28...`);
+        }
+    };
+
+    const handleChange = (event) => {
+        event.preventDefault();
+        setUserInput(event.target.value);
+    };
 
     const changeExpected = (event) => {
         setExpected(Number(event.target.value));
-        
     };
 
-    console.log(`possibleResults: `, possibleResults)
+    const restoreDefault = () => {
+        setInputArray([[2], [4, 3], [3, 2, 6], [2, 9, 5, 2], [10, 5, 2, 15, 5]]);
+    }
+
 
     return (
         <>
-            <h1>{result}</h1>
-            <h1>{testValue}</h1>
-            {/* <h1>{allPossibilities}</h1> */}
-            <button onClick={final}>Testing!</button>
-            <select className="options" onChange={changeExpected}>
-                {
-                    possibleResults.map((possibleProduct) => {
+            <div className="header">
+                <div className="horizontal">
+                        <h6>Pyramid Descent Puzzle!</h6>
+                </div>
+            </div>
+            <div className="horizontal">
+                    <h1>Pyramid descent path(s):</h1>
+            </div>
+            <ul className="horizontal">
+                <div className="no-path-message">
+                    { result.length > 0 ? result.map((path, key) => {
                         return (
-                            <option value={possibleProduct}>{possibleProduct}</option>
-                        )
-                    })
-                }
-            </select>
-
+                            <li className="path" key={ key }>{ path }</li>
+                        ) 
+                        }) : "Pick a Path below!"
+                    }
+                </div>
+            </ul>
+            <div className="horizontal">
+                <h5>Select a possible pyramid descent product to see it's path:</h5>
+            </div>
+            <div className="horizontal">
+                <select className="options" id="products" onChange={ changeExpected }>
+                    {
+                        possibleResults.map((possibleProduct, key) => {
+                            return (
+                                <option value={ possibleProduct } key={ key }>{ possibleProduct }</option>
+                            )
+                        })
+                    }
+                </select>
+            </div>
+            <div className="horizontal">
+                    <form onSubmit={ handleSubmit }>
+                            <textarea className="array-input" value={ userInput } onChange={ handleChange } placeholder="Input a pyramid of numbers like this: 2, 4, 3, 3, 2, 6, 2, 9, 5, 2, 10, 5, 2, 15, 5. Comma's are necessary, spaces and line breaks are optional."></textarea>
+                            <input type="submit" value="Input your own pyramid!" />
+                    </form>
+            </div>
+            <div className="horizontal">
+                    <button onClick={ restoreDefault }>Restore default Pyramid</button>
+            </div>
+            <div className="horizontal">
+                    <p className="default">
+                        The default pyramid looks like this: <br/>
+                        2 <br/>
+                        4  3 <br/>
+                        3  2  6 <br/>
+                        2  9  5  2 <br/>
+                        10  5  2  15  5 <br/>
+                    </p>
+            </div>
+            <div className="footer">
+                <div className="horizontal">
+                    <h6>Thanks for checking it out!</h6>
+                </div>
+            </div>
         </>
         );
 
