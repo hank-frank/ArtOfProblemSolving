@@ -80,8 +80,8 @@ button {
 button:hover {
     cursor: pointer;
     border: 4px solid $dark;
-    background-color: $orange;
-    color: $light;
+    // background-color: $orange;
+    color: $red;
 }
 
 form {
@@ -121,8 +121,8 @@ form > input {
 form > input:hover {
     cursor: pointer;
     border: 4px solid $dark;
-    background-color: $orange;
-    color: $light;
+    // background-color: $orange;
+    color: $red;
 }
 
 select {
